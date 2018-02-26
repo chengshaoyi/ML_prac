@@ -15,8 +15,12 @@ def load_train(train_path, image_size, classes):
     for fields in classes:
         index = classes.index(fields)
         print('Now going to read {} files (Index: {})'.format(fields, index))
-        path = os.path.join(train_path, fields, '*g')
+        path = os.path.join(train_path, fields+'*g')
+
         files = glob.glob(path)
+        print(path)
+        print(files)
+
         for fl in files:
             image = cv2.imread(fl)
             image = cv2.resize(image, (image_size, image_size),0,0, cv2.INTER_LINEAR)
@@ -96,7 +100,7 @@ def read_train_sets(train_path, image_size, classes, validation_size):
 
   images, labels, img_names, cls = load_train(train_path, image_size, classes)
   images, labels, img_names, cls = shuffle(images, labels, img_names, cls)
-
+  print(images.shape[0])
   if isinstance(validation_size, float):
     validation_size = int(validation_size * images.shape[0])
 

@@ -106,15 +106,36 @@ def buildCnn(x, num_channels, num_classes,
 
     return layer_fc2
 
+
+def show_progress(epoch, feed_dict_train, feed_dict_validate, val_loss, session, accuracy):
+    acc = session.run(accuracy, feed_dict=feed_dict_train)
+    val_acc = session.run(accuracy, feed_dict=feed_dict_validate)
+    msg = "Training Epoch {0} --- Training Accuracy: {1:>6.1%}, Validation Accuracy: {2:>6.1%},  Validation Loss: {3:.3f}"
+    print(msg.format(epoch + 1, acc, val_acc, val_loss))
+
+
+
 def main():
 
 
 
     img_size = 128
     num_channels = 3
-    classes = ['dogs', 'cats']
+    classes = ['dog', 'cat']
     num_classes = len(classes)
-    prepareTrainingData(validation_size=0.2, img_size=img_size, train_path="train", classes=classes)
+    data = prepareTrainingData(validation_size=0.2, img_size=img_size, train_path="train", classes=classes)
+
+    # convnet params
+    filter_size_conv1 = 3
+    num_filters_conv1 = 32
+
+    filter_size_conv2 = 3
+    num_filters_conv2 = 32
+
+    filter_size_conv3 = 3
+    num_filters_conv3 = 64
+
+    fc_layer_size = 128
 
     with tf.Session() as sess:
         x = tf.placeholder(tf.float32, shape=[None, img_size, img_size, num_channels], name='x')
@@ -123,19 +144,52 @@ def main():
         y_true = tf.placeholder(tf.float32, shape=[None, num_classes], name='y_true')
         y_true_cls = tf.argmax(y_true, dimension=1)
 
-        buildCnn(x,num)
+        outputLayer = buildCnn(x,num_channels=num_channels,num_classes=num_classes,filter_size_conv1=filter_size_conv1,
+                 num_filters_conv1=num_filters_conv1,filter_size_conv2=filter_size_conv2,num_filters_conv2=num_filters_conv2,
+                 filter_size_conv3=filter_size_conv3,num_filters_conv3=num_filters_conv3,fc_layer_size=fc_layer_size)
 
 
+        curGraph = tf.get_default_graph()
+        for op in curGraph.get_operations():
+            print("name: ", op.name)
+            print("optype: ",op.type)
+        y_pred = tf.nn.softmax(outputLayer,name="y_pred")
+        y_pred_cls = tf.argmax(y_pred, dimension=1)
 
-    a = tf.truncated_normal([16, 128, 128, 3])
-    b = tf.reshape(a, [16,49152])
+        crossEntropy = tf.nn.softmax_cross_entropy_with_logits(logits=outputLayer,labels=y_true)
+        cost = tf.reduce_mean(crossEntropy)
 
-    x = tf.placeholder(tf.float32, shape=[None, img_size, img_size, num_channels], name='x')
+        optimizer = tf.train.AdamOptimizer(learning_rate=1e-4).minimize(cost)
 
+        correctPrediction = tf.equal(y_pred_cls, y_true_cls)
+        accuracy = tf.reduce_mean(tf.cast(correctPrediction, tf.float32))
 
-    with tf.Session() as sess:
+        batchSize = 16
         sess.run(tf.global_variables_initializer())
-        print sess.run(tf.shape(b))
+        saver = tf.train.Saver()
+
+        for i in range(0, 1000):
+            xBatch, yTrueBatch, _, clsBatch = data.train.next_batch(batchSize)
+            xValidBatch, yValidBatch, _, validClsBatch = data.valid.next_batch(batchSize)
+            print("training... step: "+str(i))
+            feedDictTr = {x: xBatch, y_true: yValidBatch}
+            feedDictVal = {x: xValidBatch, y_true: yValidBatch}
+            sess.run(optimizer, feed_dict=feedDictTr)
+            if i % int(data.train.num_examples / batchSize) == 0:
+                val_loss = sess.run(cost, feed_dict=feedDictVal)
+                epoch = int(i / int(data.train.num_examples / batchSize))
+                show_progress(epoch, feedDictTr, feedDictVal, val_loss, sess, accuracy)
+                saver.save(sess,'./dogs-cats-model/dogs-cats-model')
+
+                #a = tf.truncated_normal([16, 128, 128, 3])
+    #b = tf.reshape(a, [16,49152])
+
+    #x = tf.placeholder(tf.float32, shape=[None, img_size, img_size, num_channels], name='x')
+
+
+    #with tf.Session() as sess:
+    #    sess.run(tf.global_variables_initializer())
+    #    print sess.run(tf.shape(b))
 
 
 
