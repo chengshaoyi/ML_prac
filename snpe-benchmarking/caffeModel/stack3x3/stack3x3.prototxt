@@ -1,0 +1,252 @@
+name: "stack3x3"
+layer {
+    type   : 'Input'
+    name   : 'input_code'
+    top    : 'input_code'  # [64, 256, 256] 
+    input_param {
+        shape {
+            dim : 1
+            dim : 64
+            dim : 256
+            dim : 256
+        }
+    }
+}
+layer {
+    type   : 'Convolution'
+    name   : 'Convolution_0'
+    bottom : 'input_code' # [16, 680, 4, 4] 
+    top    : 'Convolution_0'    # [16, 32, 4, 4] 
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>decode'
+    }
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>_decodebias'
+    }
+    convolution_param {
+        num_output  : 64
+        axis        : 1
+        kernel_size : 3
+        pad         : 1
+        stride      : 1
+        bias_term   : true
+        weight_filler {
+            type : 'gaussian'
+            std  : 0.05
+            mean : 0.0
+        }
+        bias_filler  {
+            type  : 'constant'
+            value : 0
+        }
+        
+    }
+}
+
+layer {
+    type   : 'ReLU'
+    name   : 'ReLU0'
+    bottom : 'Convolution_0' # [16, 64, 4, 4] 
+    top    : 'Convolution_0' # [16, 64, 4, 4] 
+    relu_param {
+        negative_slope : 0.2
+    }
+}
+
+layer {
+    type   : 'Convolution'
+    name   : 'Convolution_1'
+    bottom : 'Convolution_0'  
+    top    : 'Convolution_1'    
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>decode'
+    }
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>_decodebias'
+    }
+    convolution_param {
+        num_output  : 64
+        axis        : 1
+        kernel_size : 3
+        pad         : 1
+        stride      : 1
+        bias_term   : true
+        weight_filler {
+            type : 'gaussian'
+            std  : 0.05
+            mean : 0.0
+        }
+        bias_filler  {
+            type  : 'constant'
+            value : 0
+        }
+        
+    }
+}
+layer {
+    type   : 'ReLU'
+    name   : 'ReLU1'
+    bottom : 'Convolution_1' # [16, 64, 4, 4] 
+    top    : 'Convolution_1' # [16, 64, 4, 4] 
+    relu_param {
+        negative_slope : 0.2
+    }
+}
+
+
+
+layer {
+    type   : 'Convolution'
+    name   : 'Convolution_2'
+    bottom : 'Convolution_1' # [16, 680, 4, 4] 
+    top    : 'Convolution_2'    # [16, 32, 4, 4] 
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>decode'
+    }
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>_decodebias'
+    }
+    convolution_param {
+        num_output  : 64
+        axis        : 1
+        kernel_size : 3
+        pad         : 1
+        stride      : 1
+        bias_term   : true
+        weight_filler {
+            type : 'gaussian'
+            std  : 0.05
+            mean : 0.0
+        }
+        bias_filler  {
+            type  : 'constant'
+            value : 0
+        }
+        
+    }
+}
+layer {
+    type   : 'ReLU'
+    name   : 'ReLU2'
+    bottom : 'Convolution_2' # [16, 64, 4, 4] 
+    top    : 'Convolution_2' # [16, 64, 4, 4] 
+    relu_param {
+        negative_slope : 0.2
+    }
+}
+
+layer {
+    type   : 'Convolution'
+    name   : 'Convolution_3'
+    bottom : 'Convolution_2' # [16, 680, 4, 4] 
+    top    : 'Convolution_3'    # [16, 32, 4, 4] 
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>decode'
+    }
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>_decodebias'
+    }
+    convolution_param {
+        num_output  : 64
+        axis        : 1
+        kernel_size : 3
+        pad         : 1
+        stride      : 1
+        bias_term   : true
+        weight_filler {
+            type : 'gaussian'
+            std  : 0.05
+            mean : 0.0
+        }
+        bias_filler  {
+            type  : 'constant'
+            value : 0
+        }
+        
+    }
+}
+layer {
+    type   : 'ReLU'
+    name   : 'ReLU3'
+    bottom : 'Convolution_3' # [16, 64, 4, 4] 
+    top    : 'Convolution_3' # [16, 64, 4, 4] 
+    relu_param {
+        negative_slope : 0.2
+    }
+}
+
+layer {
+    type   : 'Convolution'
+    name   : 'Convolution_4'
+    bottom : 'Convolution_3' # [16, 680, 4, 4] 
+    top    : 'Convolution_4'    # [16, 32, 4, 4] 
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>decode'
+    }
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>_decodebias'
+    }
+    convolution_param {
+        num_output  : 64
+        axis        : 1
+        kernel_size : 3
+        pad         : 1
+        stride      : 1
+        bias_term   : true
+        weight_filler {
+            type : 'gaussian'
+            std  : 0.05
+            mean : 0.0
+        }
+        bias_filler  {
+            type  : 'constant'
+            value : 0
+        }
+        
+    }
+}
+layer {
+    type   : 'ReLU'
+    name   : 'ReLU4'
+    bottom : 'Convolution_4' # [16, 64, 4, 4] 
+    top    : 'Convolution_4' # [16, 64, 4, 4] 
+    relu_param {
+        negative_slope : 0.2
+    }
+}
+layer {
+    type   : 'Convolution'
+    name   : 'Convolution_5'
+    bottom : 'Convolution_4' # [16, 680, 4, 4] 
+    top    : 'Convolution_5'    # [16, 32, 4, 4] 
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>decode'
+    }
+    param   {
+        name : '<_pyr0level4_encode_convweights_2>_decodebias'
+    }
+    convolution_param {
+        num_output  : 64
+        axis        : 1
+        kernel_size : 3
+        pad         : 1
+        stride      : 1
+        bias_term   : true
+        weight_filler {
+            type : 'gaussian'
+            std  : 0.05
+            mean : 0.0
+        }
+        bias_filler  {
+            type  : 'constant'
+            value : 0
+        }
+        
+    }
+}
+
+
+
+
+
+
